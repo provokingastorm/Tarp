@@ -49,7 +49,7 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>True</DebugSymbols>
-    <UccUseUnpublished>False</UccUseUnpublished>
+    <UccUseUnpublished>True</UccUseUnpublished>
     <UccMultiPackageBuild>False</UccMultiPackageBuild>
     <BuildArgs />
   </PropertyGroup>
@@ -88,6 +88,10 @@
     <Folder Include="OnlineSubsystemSteamworks\Classes\" />
     <Folder Include="PodRacer\" />
     <Folder Include="PodRacer\Classes\" />
+    <Folder Include="SubstanceAirEd\" />
+    <Folder Include="SubstanceAirEd\Classes\" />
+    <Folder Include="SubstanceAir\" />
+    <Folder Include="SubstanceAir\Classes\" />
     <Folder Include="UDKBase\" />
     <Folder Include="UDKBase\classes\" />
     <Folder Include="UnrealEd\" />
@@ -98,6 +102,8 @@
     <Folder Include="UTGameContent\Classes\" />
     <Folder Include="UTGame\" />
     <Folder Include="UTGame\Classes\" />
+    <Folder Include="WinDrv\" />
+    <Folder Include="WinDrv\Classes\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\PixelMine\UnrealScript.targets" />
 </Project>

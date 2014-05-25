@@ -9,6 +9,9 @@ var(Movement) protected float SuspensionTravelAdjustSpeed;
 /** Suspension stiffness when Pod is being driven around normally */
 var(Movement) protected float FullWheelSuspensionStiffness;
 
+/** Suspension stiffness when manta is crouching */
+var(Movement) protected float CrouchedWheelSuspensionStiffness;
+
 /** Adjustment for bone offset when changing suspension */
 var  protected float BoneOffsetZAdjust;
 
@@ -53,31 +56,6 @@ function bool DriverEnter(Pawn P)
 	return false;
 }
 
-//GPM-Keep to see if I need to know how to over ride buttons, etc.
-/*
-simulated function bool OverrideBeginFire(byte FireModeNum)
-{
-	if (FireModeNum == 1)
-	{
-		bPressingAltFire = true;
-		return true;
-	}
-
-	return false;
-}
-
-simulated function bool OverrideEndFire(byte FireModeNum)
-{
-	if (FireModeNum == 1)
-	{
-		bPressingAltFire = false;
-		return true;
-	}
-
-	return false;
-}
-*/
-
 simulated event RigidBodyCollision( PrimitiveComponent HitComponent, PrimitiveComponent OtherComponent,
 				const out CollisionImpactData RigidCollisionData, int ContactIndex )
 {
@@ -95,8 +73,54 @@ simulated function bool ShouldClamp()
 
 function bool FindAutoExit(Pawn ExitingDriver)
 {
-	`log("Don't Let The Player Exit The Pod");
+	// Don't Let The Player Exit The Pod
 	return false;
+}
+
+event Tick(Float DeltaSeconds)
+{
+	local bool bAdjustSuspension;
+	local float DesiredSuspensionTravel, ClampedDeltaSeconds;
+	local int i;
+	
+	super.Tick(DeltaSeconds);
+
+	if ( bDeadVehicle )
+	{
+		return;
+	}
+	
+	AirSpeed = FullAirSpeed;
+	if ( bDriving )
+	{
+		DesiredSuspensionTravel = FullWheelSuspensionTravel;
+
+		ClampedDeltaSeconds = FMin(DeltaSeconds, 0.1);
+		for ( i=0; i<Wheels.Length; i++ )
+		{
+			bAdjustSuspension = false;
+
+			if ( Wheels[i].SuspensionTravel > DesiredSuspensionTravel )
+			{
+				// instant crouch
+				bAdjustSuspension = true;
+				Wheels[i].SuspensionTravel = DesiredSuspensionTravel;
+				SimObj.WheelSuspensionStiffness = CrouchedWheelSuspensionStiffness;
+			}
+			else if ( Wheels[i].SuspensionTravel < DesiredSuspensionTravel )
+			{
+				// slow rise
+				bAdjustSuspension = true;
+				Wheels[i].SuspensionTravel = FMin(DesiredSuspensionTravel, Wheels[i].SuspensionTravel + SuspensionTravelAdjustSpeed*ClampedDeltaSeconds);
+				SimObj.WheelSuspensionStiffness = FullWheelSuspensionStiffness;
+			}
+			if ( bAdjustSuspension )
+			{
+				Wheels[i].BoneOffset.Z = -1.0 * (Wheels[i].SuspensionTravel + Wheels[i].WheelRadius + BoneOffsetZAdjust);
+				bUpdateWheelShapes = true; 
+			}
+		}
+	}
 }
 
 //////////////////////////////////////////////////////////
@@ -119,29 +143,78 @@ defaultproperties
 	bCanFlip=false
 	FullWheelSuspensionTravel=145
 	FullWheelSuspensionStiffness=20.0
+	CrouchedWheelSuspensionStiffness=40.0
 	SuspensionTravelAdjustSpeed=100
 	BoneOffsetZAdjust=45.0
 	CustomGravityScaling=2.0 //GPM - Was 0.8
 
-	AccelRate = 2.0 //GPM-Does NOTHING
-	MaxSpeed=25000.000000  //GPM - Added this code from base vehicle code, wasnt allowing faster movement - look back in previous code to find defaults
 	AirSpeed=8000.0 //was - 1800.0
 	GroundSpeed=8000.0 //was - 1500.0
 	FullAirSpeed=8000.0 //was - 1800.0
 	bCanCarryFlag=false
-	bFollowLookDir=True
-	bTurnInPlace=True
+	bFollowLookDir=false // PSB - was True
+	bTurnInPlace=False // PSB - was True
 	bScriptedRise=True
 	bCanStrafe=False
 	SpawnRadius=256.0
 	MomentumMult=0.25//GPM- was 3.2
 
 	bStayUpright=true
-	StayUprightRollResistAngle=5.0 //GPM-Was 5.0
-	StayUprightPitchResistAngle=5.0 //GPM-Was 5.0
+	StayUprightRollResistAngle=5.0
+	StayUprightPitchResistAngle=5.0
 	StayUprightStiffness=450
-	StayUprightDamping=2
+	StayUprightDamping=2//GPM - was 20
 
+	AccelRate = 2.0 //GPM-Does NOTHING
+	MaxSpeed=25000.000000  //GPM - Added this code from base vehicle code, wasnt allowing faster movement - look back in previous code to find defaults
+
+	/*Begin Object Class=UDKVehicleSimCar Name=SimObject
+		WheelSuspensionStiffness=100.0
+		WheelSuspensionDamping=3.0
+		WheelSuspensionBias=0.1
+		ChassisTorqueScale=0.0
+		MaxBrakeTorque=5.0
+		StopThreshold=100
+
+		MaxSteerAngleCurve=(Points=((InVal=0,OutVal=45),(InVal=600.0,OutVal=15.0),(InVal=1100.0,OutVal=10.0),(InVal=1300.0,OutVal=6.0),(InVal=1600.0,OutVal=1.0)))
+		SteerSpeed=110
+
+		LSDFactor=0.0
+		TorqueVSpeedCurve=(Points=((InVal=-600.0,OutVal=0.0),(InVal=-300.0,OutVal=80.0),(InVal=0.0,OutVal=130.0),(InVal=950.0,OutVal=130.0),(InVal=1050.0,OutVal=10.0),(InVal=1150.0,OutVal=0.0)))
+		EngineRPMCurve=(Points=((InVal=-500.0,OutVal=2500.0),(InVal=0.0,OutVal=500.0),(InVal=549.0,OutVal=3500.0),(InVal=550.0,OutVal=1000.0),(InVal=849.0,OutVal=4500.0),(InVal=850.0,OutVal=1500.0),(InVal=1100.0,OutVal=5000.0)))
+		EngineBrakeFactor=0.025
+		ThrottleSpeed=0.2
+		WheelInertia=0.2
+		NumWheelsForFullSteering=4
+		SteeringReductionFactor=0.0
+		SteeringReductionMinSpeed=1100.0
+		SteeringReductionSpeed=1400.0
+		bAutoHandbrake=true
+		bClampedFrictionModel=true
+		FrontalCollisionGripFactor=0.18
+		ConsoleHardTurnGripFactor=1.0
+		HardTurnMotorTorque=0.7
+
+		SpeedBasedTurnDamping=20.0
+		AirControlTurnTorque=40.0
+		InAirUprightMaxTorque=15.0
+		InAirUprightTorqueFactor=-30.0
+
+		// Longitudinal tire model based on 10% slip ratio peak
+		WheelLongExtremumSlip=0.1
+		WheelLongExtremumValue=1.0
+		WheelLongAsymptoteSlip=2.0
+		WheelLongAsymptoteValue=0.6
+
+		// Lateral tire model based on slip angle (radians)
+   		WheelLatExtremumSlip=0.35     // 20 degrees
+		WheelLatExtremumValue=0.9
+		WheelLatAsymptoteSlip=1.4     // 80 degrees
+		WheelLatAsymptoteValue=0.9
+
+		bAutoDrive=false
+		AutoDriveSteer=0.3
+	End Object*/
 	Begin Object Class=UDKVehicleSimHover Name=SimObject
 		WheelSuspensionStiffness=20.0
 		WheelSuspensionDamping=1.0
