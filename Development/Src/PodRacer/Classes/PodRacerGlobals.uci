@@ -1,8 +1,0 @@
-//////////////////////////////////////////////
-// PodRacerGlobals.uci                      //
-//////////////////////////////////////////////
-
-const PR_MAX_PLAYERS = 12;
-
-
-`define PodWarning(msg)     `log("WARNING " $ `Location $ ": " $ msg)
