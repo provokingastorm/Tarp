@@ -13,7 +13,7 @@
     <Name>MyMod2</Name>
     <TargetGame>UnrealEngine 3 Licensee</TargetGame>
     <UccGamePrefix />
-    <UccPath>..\..\Binaries\Win32\UDK.exe</UccPath>
+    <UccPath>..\..\Binaries\Win64\UDK.exe</UccPath>
     <StartProgram>..\..\Binaries\Win32\UDK.exe</StartProgram>
     <BaseContentPath>..\..\Engine\Content</BaseContentPath>
     <GameContentPath>..\..\UDKGame\Content</GameContentPath>

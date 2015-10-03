@@ -1,1 +1,16 @@
 UDKGame/Content/LocalShaderCache-PC-D3D-SM3.upk
+*.suo
+Development/Src/PodRacer.sdf
+UDKGame/Config/UDKCharInfo.ini
+UDKGame/Config/UDKEditor.ini
+UDKGame/Config/UDKEditorUserSettings.ini
+UDKGame/Config/UDKEngine.ini
+UDKGame/Config/UDKInput.ini
+UDKGame/Config/UDKUI.ini
+*.log
+UDKGame/Config/UDKLightmass.ini
+*.user
+UDKGame/Config/UDKWeapon.ini
+*.opensdf
+UDKGame/Config/UDKGame.ini
+UDKGame/Config/UDKEditorKeyBindings.ini
