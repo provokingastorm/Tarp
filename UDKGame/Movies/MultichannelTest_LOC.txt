@@ -1,0 +1,13 @@
+30
+0 30 MultichannelTest_01
+38 68 MultichannelTest_02
+76 106 MultichannelTest_03
+114 144 MultichannelTest_04
+152 182 MultichannelTest_05
+190 220 MultichannelTest_06
+228 258 MultichannelTest_01
+266 296 MultichannelTest_02
+304 334 MultichannelTest_03
+342 372 MultichannelTest_04
+380 410 MultichannelTest_05
+418 448 MultichannelTest_06

@@ -1,0 +1,14 @@
+C:\Projects\Personal\Tarp\UDKGame\Script\Core.u
+C:\Projects\Personal\Tarp\UDKGame\Script\Engine.u
+C:\Projects\Personal\Tarp\UDKGame\Script\GFxUI.u
+C:\Projects\Personal\Tarp\UDKGame\Script\GameFramework.u
+C:\Projects\Personal\Tarp\UDKGame\Script\UnrealEd.u
+C:\Projects\Personal\Tarp\UDKGame\Script\GFxUIEditor.u
+C:\Projects\Personal\Tarp\UDKGame\Script\IpDrv.u
+C:\Projects\Personal\Tarp\UDKGame\Script\OnlineSubsystemPC.u
+C:\Projects\Personal\Tarp\UDKGame\Script\OnlineSubsystemSteamworks.u
+C:\Projects\Personal\Tarp\UDKGame\Script\UDKBase.u
+C:\Projects\Personal\Tarp\UDKGame\Script\UTEditor.u
+C:\Projects\Personal\Tarp\UDKGame\Script\UTGame.u
+C:\Projects\Personal\Tarp\UDKGame\Script\UTGameContent.u
+C:\Projects\Personal\Tarp\UDKGame\Script\PodRacer.u
